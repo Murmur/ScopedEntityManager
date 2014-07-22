@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jpa-scopedentitymanager" default="build" basedir=".">
+
+	<property name="name" value="${ant.project.name}" />
+	<property name="classes" value="./classes" />
+	<property name="src" value="./src" />
+	<property name="version" value="1.0"/>
+
+	<property environment="env"/>
+
+	<path id="libs">
+	   <pathelement location="./lib/geronimo-jpa_2.0_spec-1.1.jar" />
+	   <pathelement location="./lib/servlet-api.jar" />
+	</path>
+
+	<tstamp>
+	   <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+	</tstamp>
+
+
+	<target name="updatemanifest" description="Update manifest">
+	   <buildnumber file="build.num"/>
+
+	   <copy file="${src}/META-INF/MANIFEST.MF" 
+	      todir="${classes}/META-INF/" overwrite="true" preservelastmodified="true"
+	   />
+
+	   <manifest file="${classes}/META-INF/MANIFEST.MF" mode="update">
+	      <attribute name="Implementation-Version" value="${version}.${build.number} (${TODAY})"/>
+	      <attribute name="Implementation-Title"   value="${name}" />
+	   </manifest>
+	</target>
+
+	<target name="clean" description="Clean compiled classes">
+		<delete dir="${classes}" />
+	</target>
+
+	<target name="compile" depends="clean" description="Compile classes">
+		<mkdir dir="${classes}"/>
+		<javac srcdir="${src}" destdir="${classes}" target="1.6" source="1.6" encoding="ISO-8859-1" 
+			debug="true" debuglevel="lines,source" includeantruntime="false"
+			excludes="" >
+			<classpath refid="libs" />
+		</javac>
+	</target>
+
+	<target name="jar" depends="updatemanifest" description="Create a .jar file">
+		<echo message="Build release:" />
+		<jar manifest="${classes}/META-INF/MANIFEST.MF" 
+		     jarfile="./lib/${name}-${version}.jar" >
+		     <fileset dir="${classes}"></fileset>
+		</jar>
+	</target>
+
+	<target name="build" description="Build lib from scratch" depends="compile,jar" >
+	</target>
+
+</project>
