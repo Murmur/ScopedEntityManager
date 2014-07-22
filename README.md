@@ -36,7 +36,7 @@ Public methods retrieving existing or new entity managers.
 **PersistenceManager PersistenceManager.getInstance()**
 Returns singleton of PersistenceManager class.
 
-**EntityManager getEntityManager()**
+**EntityManager getEntityManager()**<br/>
 Get default entity manager which is owned by calling threadID, each 
 concecutive call within a thread receives same instance.
 
