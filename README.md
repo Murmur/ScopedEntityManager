@@ -55,7 +55,7 @@ automatically closed if web application is undeployed.
 
 Configuration
 -------------
-Insert http request listener to enable automanaged entity manager lifetime.
+Insert http request listener in WEB-INF/web.xml to enable automanaged entity manager lifetime.
 First PersistenceUnit name is read from persistence.xml at webapp start,
 all instances closed at webapp stop, thread-level instances closed at http request.
 
