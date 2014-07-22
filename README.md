@@ -31,7 +31,7 @@ released at the end of http request lifetime.
 
 Public interface
 -----------------
-Public methods retrieving existing or new entity managers.
+Public methods retrieving existing or new entity managers. Methods are thread-safe.
 
 **PersistenceManager PersistenceManager.getInstance()**<br/>
 Returns singleton of PersistenceManager class.
@@ -44,7 +44,7 @@ concecutive call within a thread receives same instance.
 Get or create named instance owned by given ownerID.<br/>
 @ownerId  owner id which usually is threadID 1...n, this may be -n..-1 custom id but
           then application must close those non-automanaged instances. <br/>
-@dbName   PersistenceUnit name in persistence.xml file, always NULL current implentation uses first PU name<br/>
+@dbName   PersistenceUnit name in persistence.xml file, always NULL current implementation uses first PU name<br/>
 @emName   instance name to be get or created on first call, NULL always creates new instance<br/>
 @map      JPA entity manager constructor options or NULL<br/>
 
@@ -52,6 +52,19 @@ Get or create named instance owned by given ownerID.<br/>
 Close entity managers by owner id, this is automatically called for http request context.
 Application must call this if -n..-1 custom ownerID was used. All open instances are
 automatically closed if web application is undeployed.
+
+Configuration
+-------------
+Insert http request listener to enable automanaged entity manager lifetime.
+First PersistenceUnit name is read from persistence.xml at webapp start,
+all instances closed at webapp stop, thread-level instances closed at http request.
+
+```
+<listener>
+  <description>Automanage JPA EntityManager within http request lifetime</description>
+  <listener-class>es.claro.persistence.ScopedServletListener</listener-class>
+</listener>
+```
 
 Example
 -------
@@ -81,3 +94,9 @@ Compatibility is tested on the following environments, but wrapper should probab
 work on other JPA 2.x implementations as well.<br/>
 Tomcat7, JDK7, OpenJPA2.2_release<br/>
 Tomcat7, JDK7, OpenJPA2.4.0_nightly<br/>
+
+TODO
+----
+**Support two or more PersistenceUnit names**<br/>
+Current implementation uses first PU name from persistence.xml file, its not possible to
+use other database connections.
