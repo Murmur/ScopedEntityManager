@@ -33,22 +33,22 @@ Public interface
 -----------------
 Public methods retrieving existing or new entity managers.
 
-**PersistenceManager PersistenceManager.getInstance()**
+**PersistenceManager PersistenceManager.getInstance()**<br/>
 Returns singleton of PersistenceManager class.
 
 **EntityManager getEntityManager()**<br/>
 Get default entity manager which is owned by calling threadID, each 
 concecutive call within a thread receives same instance.
 
-**EntityManager getEntityManager(long ownerId, String dbName, String emName, Map map)**
-Get or create named instance owned by given ownerID.
-@ownerId  owner id which usually is threadID 1...n, this may be -n..-1 custom id but
+**EntityManager getEntityManager(long ownerId, String dbName, String emName, Map map)**<br/>
+Get or create named instance owned by given ownerID.<br/>
+@ownerId  owner id which usually is threadID 1...n, this may be -n..-1 custom id but<br/>
           then application must close those non-automanaged instances. 
-@dbName   PersistenceUnit name in persistence.xml file, always NULL current implentation uses first PU name
-@emName   instance name to be get or created on first call, NULL always creates new instance
-@map      JPA entity manager constructor options or NULL
+@dbName   PersistenceUnit name in persistence.xml file, always NULL current implentation uses first PU name<br/>
+@emName   instance name to be get or created on first call, NULL always creates new instance<br/>
+@map      JPA entity manager constructor options or NULL<br/>
 
-**void closeEntityManagers(long ownerId)**
+**void closeEntityManagers(long ownerId)**<br/>
 Close entity managers by owner id, this is automatically called for http request context.
 Application must call this if -n..-1 custom ownerID was used. All open instances are
 automatically closed if web application is undeployed.
@@ -72,12 +72,12 @@ em.getTransaction().commit();
 
 Dependencies
 ------------
-Servlet container libraries.
-JPA implementation such as [Apache OpenJPA](http://openjpa.apache.org/) libraries.
+Servlet container libraries.<br/>
+JPA implementation such as [Apache OpenJPA](http://openjpa.apache.org/) libraries.<br/>
 
 Compatibility tested on
 -----------------------
 Compatibility is tested on the following environments, but wrapper should probably
-work on other JPA 2.x implementations as well.
-Tomcat7, JDK7, OpenJPA2.2_release
-Tomcat7, JDK7, OpenJPA2.4.0_nightly
+work on other JPA 2.x implementations as well.<br/>
+Tomcat7, JDK7, OpenJPA2.2_release<br/>
+Tomcat7, JDK7, OpenJPA2.4.0_nightly<br/>
