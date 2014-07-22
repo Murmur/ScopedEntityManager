@@ -100,3 +100,6 @@ TODO
 **Support two or more PersistenceUnit names**<br/>
 Current implementation uses first PU name from persistence.xml file, its not possible to
 use other database connections.
+
+**Example webapp.war package**<br/>
+Provide example webapp.war with OpenJAP libraries, few @JPA_annotated java beans, jsp scripts.
