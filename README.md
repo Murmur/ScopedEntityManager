@@ -42,8 +42,8 @@ concecutive call within a thread receives same instance.
 
 **EntityManager getEntityManager(long ownerId, String dbName, String emName, Map map)**<br/>
 Get or create named instance owned by given ownerID.<br/>
-@ownerId  owner id which usually is threadID 1...n, this may be -n..-1 custom id but<br/>
-          then application must close those non-automanaged instances. 
+@ownerId  owner id which usually is threadID 1...n, this may be -n..-1 custom id but
+          then application must close those non-automanaged instances. <br/>
 @dbName   PersistenceUnit name in persistence.xml file, always NULL current implentation uses first PU name<br/>
 @emName   instance name to be get or created on first call, NULL always creates new instance<br/>
 @map      JPA entity manager constructor options or NULL<br/>
