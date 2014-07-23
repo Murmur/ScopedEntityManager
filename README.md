@@ -83,6 +83,10 @@ bean.setComment("this is new comment text " + System.currentTimeMillis() );
 em.getTransaction().commit();
 ```
 
+Web application in example_webapp folder has few .jsp scripts and OpenJPA libraries.
+It uses OpenJPA specific helper classes in JPA beans when serializing 
+datetime field between database and java bean.
+
 Dependencies
 ------------
 Servlet container libraries.<br/>
@@ -100,6 +104,3 @@ TODO
 **Support two or more PersistenceUnit names**<br/>
 Current implementation uses first PU name from persistence.xml file, its not possible to
 use other database connections.
-
-**Example webapp.war package**<br/>
-Provide example webapp.war with OpenJAP libraries, few @JPA_annotated java beans, jsp scripts.
