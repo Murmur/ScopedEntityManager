@@ -1,0 +1,21 @@
+## ignore files
+
+## OS metafiles
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+Thumbs.db
+
+/classes/
+/build/
+/bak/
+/temp/
+
+/*.bat
+/*.war
+/build.num
+/local.properties
+/todo.txt
+
+/webapp/WEB-INF/lib/jpaexample.jar

@@ -1,0 +1,4 @@
+Implementation-Title: projectname
+Implementation-Version: 1.0.0 (2010-12-31)
+Implementation-Vendor: Murmur
+Implementation-URL: https://github.com/Murmur/ScopedEntityManager

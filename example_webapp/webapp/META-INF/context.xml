@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context
+   debug="0" reloadable="true" crossContext="true" >
+
+<!--
+  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+    allow="127.0.0.1, 0:0:0:0:0:0:0:1" />
+-->
+
+<!--
+   <Valve className="org.apache.catalina.valves.RequestDumperValve"/>
+-->
+
+  <Resource name="jdbc/test" auth="Container" type="javax.sql.DataSource"
+	maxActive="100" maxIdle="20" maxWait="10000"
+	username="test" password="test" 
+	driverClassName="com.mysql.jdbc.Driver"
+	url="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf8"
+        validationQuery="SELECT 1"
+  />
+  
+</Context>

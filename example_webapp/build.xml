@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jpaexample" default="build" basedir=".">
+
+	<property name="name" value="${ant.project.name}" />
+	<property name="classes" value="./classes" />
+	<property name="src" value="./src" />
+	<property name="version" value="1.0"/>
+
+	<property environment="env"/>
+
+	<path id="libs">
+		<fileset dir="webapp/WEB-INF/lib"><include name="*.jar" /></fileset>
+	</path>
+
+	<tstamp>
+	   <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+	</tstamp>
+
+
+	<target name="updatemanifest" description="Update manifest">
+	   <buildnumber file="build.num"/>
+
+	   <copy file="${src}/META-INF/MANIFEST.MF" 
+	      todir="${classes}/META-INF/" overwrite="true" preservelastmodified="true"
+	   />
+
+	   <manifest file="${classes}/META-INF/MANIFEST.MF" mode="update">
+	      <attribute name="Implementation-Version" value="${version}.${build.number} (${TODAY})"/>
+	      <attribute name="Implementation-Title"   value="${name}" />
+	   </manifest>
+	</target>
+
+	<target name="clean" description="Clean compiled classes">
+		<delete dir="${classes}" />
+	</target>
+
+	<target name="compile" depends="clean" description="Compile classes">
+		<mkdir dir="${classes}"/>
+		<javac srcdir="${src}" destdir="${classes}" target="1.7" source="1.7" encoding="ISO-8859-1" 
+			debug="true" debuglevel="lines,source" includeantruntime="false"
+			excludes="" >
+			<classpath refid="libs" />
+		</javac>
+		<antcall target="jpaenhance" />
+	</target>
+	
+	
+	<target name="jpaenhance" description="Preprocess entity classes, enhance for JPA use">
+		<path id="jpa.enhancement.classpath">
+			<pathelement location="${classes}" />
+			<fileset dir="./webapp/WEB-INF/lib">
+		    	<include name="*.jar" />
+				<exclude name="${name}.jar" />
+			</fileset>
+		</path>
+
+		<taskdef name="openjpac" classname="org.apache.openjpa.ant.PCEnhancerTask">
+			<classpath refid="jpa.enhancement.classpath" />
+		</taskdef>	
+		<openjpac>
+	  		<classpath refid="jpa.enhancement.classpath" />
+			<config propertiesFile="./webapp/WEB-INF/classes/META-INF/persistence.xml" />			
+		</openjpac>
+	</target>
+
+	<target name="jar" depends="updatemanifest" description="Create a .jar file">
+		<echo message="Build release: ${client}" />		
+		<jar basedir="${classes}"
+			manifest="${classes}/META-INF/MANIFEST.MF" 
+			jarfile="./webapp/WEB-INF/lib/${name}.jar" >
+		</jar>
+	</target>
+
+	<target name="war" depends="jar" description="Create a .war file">
+		<delete file="${name}.war" />
+		<zip destfile="${name}.war"
+			basedir="./webapp/"
+			excludes="
+				**/CVS*
+				"
+		/>
+	</target>
+	
+	<target name="build" description="Build lib from scratch" depends="compile" >
+		<antcall target="war"> <param name="client" value="all"/> </antcall>
+	</target>
+
+</project>

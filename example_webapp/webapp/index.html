@@ -1,0 +1,37 @@
+﻿<html>
+<head>
+  <title>JPAExample</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<h3>JPAExample</h3>
+Test ScopedEntityManager wrapper in Tomcat web application.<br/>
+
+<p>
+<a href="jpa_testdata.jsp">jpa_testdata.jsp</a><br/>
+Insert new rows to database.
+</p>
+
+<p>
+<a href="jpa0.jsp">jpa0.jsp</a><br/>
+List rows, use default findAll() helper function.
+</p>
+
+<p>
+<a href="jpa0.jsp?option=1">jpa0.jsp?option=1</a><br/>
+List rows using a custom EM query providing a sort ordering.
+</p>
+
+<p>
+<a href="jpa1.jsp">jpa1.jsp</a><br/>
+Update bean and list rows.
+</p>
+
+<p>
+<a href="jpa2.jsp">jpa2.jsp</a><br/>
+Run multiple threads, use several automanaged EM instances, print few db beans.
+</p>
+
+</body>
+</html>
