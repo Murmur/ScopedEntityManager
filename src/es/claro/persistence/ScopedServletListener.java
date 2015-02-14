@@ -18,9 +18,9 @@ public class ScopedServletListener  implements ServletContextListener, ServletRe
 		// value is <persistence-unit name="myjpaunit" ...> attribute.
 		InputStream is=null;
 		try {
-			is = evt.getServletContext().getResourceAsStream("WEB-INF/classes/META-INF/persistence.xml");
+			is = evt.getServletContext().getResourceAsStream("/WEB-INF/classes/META-INF/persistence.xml");
 			if (is==null)
-				is = evt.getServletContext().getResourceAsStream("META-INF/persistence.xml");
+				is = evt.getServletContext().getResourceAsStream("/META-INF/persistence.xml");
 			String name = null;
 			if (is != null) {
 				// hack: no love for XML parser for this one use-case only
