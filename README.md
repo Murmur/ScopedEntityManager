@@ -98,6 +98,7 @@ Compatibility is tested on the following environments, but wrapper should probab
 work on other JPA 2.x implementations as well.<br/>
 Tomcat7, JDK7, OpenJPA2.2_release<br/>
 Tomcat7, JDK7, OpenJPA2.4.0_nightly<br/>
+IBM WAS 8.5.5, JDK7, OpenJPA2.0<br/>
 
 TODO
 ----
