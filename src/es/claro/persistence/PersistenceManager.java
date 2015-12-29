@@ -114,29 +114,26 @@ public class PersistenceManager {
 	 *                  Do not use 0 it closes all instances, its used when webapp context is destroyed.
 	 */
 	public void closeEntityManagers(long ownerId) {
+		List<ScopedEntityManager> ems;
 		if (ownerId==0) {
 			// close all instances, entire app context was destroyed
+			ems = new ArrayList<ScopedEntityManager>();
 			synchronized(this) {
-				Iterator<Long> iter = emList.keySet().iterator();
-				while(iter.hasNext()) {
-					List<ScopedEntityManager> ems = emList.get(iter.next());
-					for(int idx=ems.size()-1; idx>=0; idx--) 
-						try { ems.get(idx).lazyClose(); } catch(Exception ex){}
-				}
-				emList.clear();
-			}			
+				for(List<ScopedEntityManager> list : emList.values())
+					ems.addAll(list);
+				emList.clear();				
+			}
 		} else {
 			// close instances owned by this thread, httprequest context was destroyed 
 			Long tid = Long.valueOf(ownerId);
-			List<ScopedEntityManager> ems;
 			synchronized(this) {
 				ems = emList.remove(tid);
 			}
-			if (ems!=null) {
-				for(int idx=ems.size()-1; idx>=0; idx--) 
-					try { ems.get(idx).lazyClose(); } catch(Exception ex){}
-			}
 		}
+		if (ems!=null) {
+			for(int idx=ems.size()-1; idx>=0; idx--) 
+				try { ems.get(idx).lazyClose(); } catch(Exception ex){}
+		}		
 	}
 
 	private synchronized void lazilyClosed(ScopedEntityManager em) {
@@ -160,6 +157,32 @@ public class PersistenceManager {
 	 */
 	protected void setPersistenceUnit(String name) {
 		persistenceUnit = name;
+	}
+	
+	/**
+	 * Get current statistics (debug use only).
+	 * @return
+	 */
+	public synchronized Map<String,String> getStatistics() {
+		long now = System.currentTimeMillis();
+		Map<String,String> stats = new LinkedHashMap<String, String>();
+		stats.put("em.ownerCount", ""+emList.size());
+		int idx=-1;
+		for(Long key : emList.keySet()) {			
+			idx++;
+			List<ScopedEntityManager> list =  emList.get(key);			
+			stats.put("em"+idx+".ownerId", ""+key);	// owner ThreadId			
+			if (list!=null) {
+				for(int idxb=0; idxb<list.size(); idxb++) {
+					ScopedEntityManager em = list.get(idxb);
+					stats.put("em"+idx+"."+idxb+".name", ""+em.getName());
+					stats.put("em"+idx+"."+idxb+".createdUTC", ""+em.getCreated());
+					stats.put("em"+idx+"."+idxb+".createdSince", ""+(now-em.getCreated()) );
+				}
+			}
+		}
+		
+		return stats;
 	}
 
 }

@@ -1,24 +1,33 @@
 package es.claro.persistence;
 
 import java.io.*;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
 
 /**
- * Handle automanaged EntityManager HTTP request and context lifecycle.
- *
- * Tomcat may not call lifecycle methods at the same thread, 
- * this breaks ThreadLocal or threadId resource management.
- * https://bz.apache.org/bugzilla/show_bug.cgi?id=57314
- * @deprecated Use ScopedContextListener and ScopedRequestFilter 
+ * Initialize global JPA PersistenceManager at the start of webapp context lifecycle.
+ * Destroy global JPA PersistenceManager  at the end of webapp context lifecycle. 
+ * https://bz.apache.org/bugzilla/show_bug.cgi?id=57314´
+ * 
+ * Define listener and filter in web.xml file
+  <listener>
+    <description>Initialize global JPA resources</description>
+    <listener-class>es.claro.persistence.ScopedContextListener</listener-class>
+  </listener>
+  <filter>
+    <filter-name>ScopedRequestFilter</filter-name>
+    <filter-class>es.claro.persistence.ScopedRequestFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>ScopedRequestFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+ * @see 	ScopedRequestFilter.java  
  */
-public class ScopedServletListener  implements ServletContextListener, ServletRequestListener {
+public class ScopedContextListener implements ServletContextListener {
 	
-	@Override
-	public void contextInitialized(ServletContextEvent evt) {
+	@Override public void contextInitialized(ServletContextEvent evt) {
 		// Read JPA persistence unit name from xml file,
 		// value is <persistence-unit name="myjpaunit" ...> attribute.
 		InputStream is=null;
@@ -50,8 +59,7 @@ public class ScopedServletListener  implements ServletContextListener, ServletRe
 		}
 	}
 
-	@Override
-	public void contextDestroyed(ServletContextEvent evt) {
+	@Override public void contextDestroyed(ServletContextEvent evt) {
 		// close factory instance, its one instance per application
 		try {
 			PersistenceManager.getInstance().closeEntityManagerFactory();
@@ -59,16 +67,5 @@ public class ScopedServletListener  implements ServletContextListener, ServletRe
 			evt.getServletContext().log(ex.getMessage(), ex);
 		}
 	}
-	
-	@Override
-	public void requestInitialized(ServletRequestEvent evt) { 
-		//System.out.println("reqInit="+Thread.currentThread().getId());
-	}
 
-	@Override
-	public void requestDestroyed(ServletRequestEvent evt) {
-		//System.out.println("reqDest="+Thread.currentThread().getId());
-		PersistenceManager.getInstance().closeEntityManagers(Thread.currentThread().getId());
-	}
-	
 }

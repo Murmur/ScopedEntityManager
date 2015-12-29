@@ -21,6 +21,7 @@ import javax.persistence.metamodel.Metamodel;
  */
 public class ScopedEntityManager implements EntityManager {
 	private final EntityManager delegate;
+	private long tsCreated;
 	private long ownerId;
 	private String emName; // this may be NULL
 	private Map<String,Object> attributes;
@@ -30,6 +31,7 @@ public class ScopedEntityManager implements EntityManager {
 		this.delegate = delegate;
 		this.ownerId=ownerId;
 		this.emName=emName;
+		this.tsCreated=System.currentTimeMillis();
 	}
   
 	@Override
@@ -43,6 +45,7 @@ public class ScopedEntityManager implements EntityManager {
 	}
 
 	protected void lazyClose() {
+		//System.out.println("emLazyClose "+this.ownerId);
 		try {
 			// auto-rollback if TX was started and is still open
 			if (getTransaction().isActive())
@@ -111,6 +114,7 @@ public class ScopedEntityManager implements EntityManager {
 	
 	public String getName() { return emName; }
 	public long getOwnerId() { return ownerId; }
+	public long getCreated() { return tsCreated; }
 	
   	public Object getAttribute(String name) {
   	  	// attributes variable is set to NULL in close() function
