@@ -1,4 +1,8 @@
-ScopedEntityManager
+See JPA_2.2 release [ScopedEntityManager2](https://github.com/Murmur/ScopedEntityManager2)
+https://github.com/Murmur/ScopedEntityManager2
+
+---
+ScopedEntityManager (old release)
 ===================
 Java Persistence API (JPA) wrapper for servlet container such as Apache Tomcat.
 Automanage Entity Manager lifetime within http request context.
